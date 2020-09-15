@@ -9,35 +9,45 @@ version = "0.2.2-2"
 
 kotlin {
     val ideaActive = System.getProperty("idea.active") == "true"
-    val os = org.gradle.internal.os.OperatingSystem.current()!!
 
     if (ideaActive) {
         jvm()
-        js().nodejs()
-        linuxX64()
-    } else if (os.isMacOsX) {
-        jvm()
-        js().nodejs()
-        linuxX64()
+        js { 
+            nodejs()
+            browser()
+        }
         macosX64()
-        iosArm32()
-        iosArm64()
-        iosX64()
-        tvosArm64()
-        tvosX64()
+    } else {
+        jvm()
+        
+        js {
+            nodejs()
+            browser()
+        }
+        
+        ios()
+        watchos()
+        tvos()
+        macosX64()
+
+        linuxArm64()
+        linuxArm32Hfp()
+        linuxMips32()
+        linuxMipsel32()
+        linuxX64()
+        
+        mingwX86()
         mingwX64()
-    } else if (os.isWindows) {
-        mingwX64()
+
+        wasm32()
     }
 
     sourceSets {
-        commonMain {
-            kotlin.srcDir("src/main/kotlin")
+        val commonMain by getting {
             dependencies {
-                api(kotlin("stdlib"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.3.4")
-                api("io.ktor:ktor-client-core-native:1.3.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+                api("io.ktor:ktor-client-core:1.4.0")
             }
         }
     }
